@@ -3,12 +3,28 @@
 <html>
   <head>
     <title>AndCircuit</title>
+    <script src="lib/json2.js"></script>
+    <script src="lib/jquery-1.7.1.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/backbone.js"></script>
+    <script src="lib/backbone-localstorage.js"></script>
+    <script src="AndCircuit.js"></script>
   </head>
 
   <body>
-    <div class="schematic">
+    <div id="schematic">
     </div>
-    <div class="sidebar">
+    <div id="sidebar">
+      <div id="components">
+        <ul id="component-palette"></ul>
+      </div>
     </div>
+
+
+    <script type="text/template" id="component-template">
+      <div class="component">
+        <label class="component-name"><%= name %></label>
+      </div>
+    </script>
   </body>
 </html>
