@@ -1,8 +1,5 @@
-$(function() {
-  var root = (function(){return this;}).call();
-
-  var AndCircuit = root.AndCircuit = {};
-  var Components, App;
+var root = (function(){return this;}).call();
+root.AndCircuit = (function(AndCircuit, $) {
 
   var Component = AndCircuit.Component = Backbone.Model.extend({
     defaults: {
@@ -41,8 +38,6 @@ $(function() {
     tagName: "li",
     className: "component-item",
 
-    template: _.template($('#component-template').html()),
-
     events: {
       "dragstop" : "dropped"
     },
@@ -51,6 +46,8 @@ $(function() {
       _.bindAll(this, 'render', 'close', 'remove', 'dropped');
       this.model.on('change', this.render);
       this.model.on('destroy', this.remove);
+
+      this.template = _.template($('#component-template').html());
 
       this.$el.draggable({ grid: [ 10,10 ], helper: 'clone' });
     },
@@ -74,13 +71,15 @@ $(function() {
   });
 
   var SchematicView = AndCircuit.SchematicView = Backbone.View.extend({
-    el: $("#schematic"),
 
     initialize: function() {
 
-      _.bindAll(this, 'render');
+      _.bindAll(this, 'render', 'resize');
+
+      this.setElement($('#schematic'));
 
       this.options.parent.on('tick', this.render);
+      this.options.parent.on('resize', this.resize);
 
       this.$canvas = $("<canvas>").appendTo(this.$el)
         .attr("id", "schematic-canvas");
@@ -89,41 +88,64 @@ $(function() {
 
       var image = new Image();
       var stage = this.stage;
+
+      this.resize();
+
       image.src = "lib/EaselJS/examples/img/daisy.png";
       image.onload = function(event) {
         var bitmap = new Bitmap(event.target);
         stage.addChild(bitmap);
       }
 
-
+      var g = new Graphics();
+      var s = new Shape(g);
+      stage.addChild(s);
+      g.setStrokeStyle(1);
+      g.beginStroke(Graphics.getRGB(0,0,0));
+      g.beginFill(Graphics.getRGB(255,0,0));
+      g.moveTo(100,0);
+      g.lineTo(100, stage.canvas.height);
+      
     },
 
     render: function() {
       this.stage.update();
+    },
+
+    resize: function() {
+      this.stage.canvas.height = this.$el.height();
+      this.stage.canvas.width = this.$el.width();
     }
   });
 
   var AppView = AndCircuit.AppView = Backbone.View.extend({
-    el: $("body"),
 
     initialize: function() {
       _.bindAll(this, 'addOne', 'addAll', 'render');
 
-      Components.on('add', this.addOne);
-      Components.on('reset', this.addAll);
-      Components.on('all', this.render);
+      this.setElement($('body'));
 
-      Components.fetch();
+      this.Components = new ComponentList;
+
+      this.Components.on('add', this.addOne);
+      this.Components.on('reset', this.addAll);
+      this.Components.on('all', this.render);
+
+      this.Components.fetch();
 
       this.Schematic = new SchematicView({parent: this});
 
       var that = this;
       var tickObject = {
         tick: function(timeElapsed) {
-          that.trigger("tick", timeElapsed);
+          that.trigger('tick', timeElapsed);
         }
       };
       Ticker.addListener(tickObject);
+
+      $(window).resize(function(event) {
+        that.trigger('resize', event);
+      });
     },
 
     render: function() {
@@ -132,15 +154,13 @@ $(function() {
 
     addOne: function(component) {
       var view = new ComponentView({model: component});
-      this.$("#component-palette").append(view.render().el);
+      this.$('#component-palette').append(view.render().el);
     },
 
     addAll: function() {
-      Components.each(this.addOne);
+      this.Components.each(this.addOne);
     }
-
   });
 
-  Components = AndCircuit.Components = new ComponentList;
-  App = AndCircuit.App = new AppView;
-});
+  $(function() {AndCircuit.App = new AppView;});
+}(root.AndCircuit || {}, jQuery));

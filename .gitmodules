@@ -1,0 +1,15 @@
+[submodule "lib/jquery-ui"]
+	path = lib/jquery-ui
+	url = git://github.com/jquery/jquery-ui.git
+[submodule "lib/requirejs"]
+	path = lib/requirejs
+	url = git://github.com/jrburke/requirejs.git
+[submodule "lib/underscore"]
+	path = lib/underscore
+	url = git://github.com/amdjs/underscore.git
+[submodule "lib/backbone"]
+	path = lib/backbone
+	url = git://github.com/amdjs/backbone.git
+[submodule "lib/EaselJS"]
+	path = lib/EaselJS
+	url = git@github.com:AndASM/EaselJS.git
