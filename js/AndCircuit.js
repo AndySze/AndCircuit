@@ -1,5 +1,4 @@
-var root = (function(){return this;}).call();
-root.AndCircuit = (function(AndCircuit, $) {
+define('AndCircuit', ['jquery', 'backbone', 'underscore', 'backbone/localstorage', 'exports', 'jqueryui/draggable'], function($, Backbone, _, bblocalStorage, AndCircuit) {
 
   var Component = AndCircuit.Component = Backbone.Model.extend({
     defaults: {
@@ -21,7 +20,7 @@ root.AndCircuit = (function(AndCircuit, $) {
   var ComponentList = AndCircuit.ComponentList = Backbone.Collection.extend({
     model: Component,
 
-    localStorage: new Store("AndCircuit-Backbone"),
+    localStorage: new bblocalStorage.Store("AndCircuit-Backbone"),
 
     nextOrder: function() {
       if (!this.length) return 1;
@@ -162,5 +161,5 @@ root.AndCircuit = (function(AndCircuit, $) {
     }
   });
 
-  $(function() {AndCircuit.App = new AppView;});
-}(root.AndCircuit || {}, jQuery));
+  
+});

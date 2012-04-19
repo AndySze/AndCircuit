@@ -13,3 +13,6 @@
 [submodule "lib/EaselJS"]
 	path = lib/EaselJS
 	url = git@github.com:AndASM/EaselJS.git
+[submodule "lib/jqueryui-amd"]
+	path = lib/jqueryui-amd
+	url = https://github.com/jrburke/jqueryui-amd.git
