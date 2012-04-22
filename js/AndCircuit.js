@@ -1,4 +1,8 @@
-define('AndCircuit', ['jquery', 'backbone', 'underscore', 'backbone/localstorage', 'exports', 'jqueryui/draggable'], function($, Backbone, _, bblocalStorage, AndCircuit) {
+define('AndCircuit',
+       ['jquery', 'backbone', 'underscore', 'backbone/localstorage', 'exports',
+         'EaselJS/display/Stage', 'EaselJS/display/Graphics', 'EaselJS/display/Shape', 'EaselJS/utils/Ticker',
+         'jqueryui/draggable'],
+       function($, Backbone, _, bblocalStorage, AndCircuit, Stage, Graphics, Shape, Ticker) {
 
   var Component = AndCircuit.Component = Backbone.Model.extend({
     defaults: {

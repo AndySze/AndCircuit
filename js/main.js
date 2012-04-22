@@ -4,9 +4,10 @@ require({
     jqueryui: '../lib/jqueryui-built/jqueryui',
     backbone: '../lib/backbone/backbone',
     'backbone/localstorage': '../lib/backbone-localstorage',
-    underscore: '../lib/underscore/underscore'
+    underscore: '../lib/underscore/underscore',
+    EaselJS: '../lib/EaselJS/src/easeljs'
   },
   priority: ['jquery']
-}, ['AndCircuit', 'jquery'], function(AndCircuit, $) {
-  $(function() {AndCircuit.App = new AndCircuit.AppView;});
+}, ['jquery', 'AppView'], function($, AppView) {
+  $(function() {App = new AppView();});
 });
