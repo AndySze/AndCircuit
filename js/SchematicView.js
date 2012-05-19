@@ -1,16 +1,22 @@
 define('SchematicView',
        ['jquery', 'backbone', 'underscore',
          'EaselJS/display/Stage', 'EaselJS/display/Graphics', 'EaselJS/display/Shape',
-         'jqueryui/draggable'],
+         'jqueryui/draggable', 'jqueryui/droppable'],
        function($, Backbone, _, Stage, Graphics, Shape) {
 
   var SchematicView = Backbone.View.extend({
+    events: {
+      dropover: 'dragOver',
+      dropout: 'dragOut',
+      drop: 'drop'
+    },
 
     initialize: function() {
 
-      _.bindAll(this, 'render', 'resize');
+      _.bindAll(this, 'render', 'resize', 'dragOver', 'dragOut', 'dragging', 'drop');
 
       this.setElement($('#schematic'));
+      this.$el.droppable();
 
       this.options.parent.on('tick', this.render);
       this.options.parent.on('resize', this.resize);
@@ -20,16 +26,9 @@ define('SchematicView',
       this.canvas = this.$canvas[0];
       this.stage = new Stage(this.canvas);
 
-      var image = new Image();
       var stage = this.stage;
 
       this.resize();
-
-      image.src = "lib/EaselJS/examples/img/daisy.png";
-      image.onload = function(event) {
-        var bitmap = new Bitmap(event.target);
-        stage.addChild(bitmap);
-      }
 
       this.gridgraphics = new Graphics();
       this.gridshape = new Shape(this.gridgraphics);
@@ -37,6 +36,43 @@ define('SchematicView',
       stage.addChild(this.gridshape);
 
       this.updateGrid();
+    },
+
+    dragOver: function(event, ui) {
+      ui.helper.hide();
+      var view = ui.draggable.data('view');
+      if (this.dragshape) {
+        this.stage.removeChild(this.dragshape);
+        this.dragshape = null;
+      }
+      this.dragshape = new Shape(view.model.graphics);
+      this.stage.addChild(this.dragshape);
+      view.on('dragging', this.dragging);
+    },
+
+    dragOut: function(event, ui) {
+      ui.helper.show();
+      var view = ui.draggable.data('view');
+      view.off('dragging', this.dragging);
+      this.stage.removeChild(this.dragshape);
+      this.dragshape = null;
+    },
+
+    dragging: function(event, ui) {
+      if (this.dragshape) {
+        var position = this.$el.offset();
+        this.dragshape.x = event.pageX - position.left - 30;
+        this.dragshape.x = Math.round(this.dragshape.x / 10) * 10;
+        this.dragshape.y = event.pageY - position.top - 20;
+        this.dragshape.y = Math.round(this.dragshape.y / 10) * 10;
+      }
+    },
+
+    drop: function(event, ui) {
+      if (this.dragshape) {
+        this.stage.removeChild(this.dragshape);
+        this.dragshape = null;
+      }
     },
 
     updateGrid: function() {

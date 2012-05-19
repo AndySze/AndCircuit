@@ -4,10 +4,11 @@ require({
     jqueryui: '../lib/jqueryui-built/jqueryui',
     backbone: '../lib/backbone/backbone',
     'backbone/localstorage': '../lib/backbone-localstorage',
+    'backbone/relational': '../lib/backbone-relational/backbone-relational',
     underscore: '../lib/underscore/underscore',
     EaselJS: '../lib/EaselJS/src/easeljs'
   },
   priority: ['jquery']
 }, ['jquery', 'AppView'], function($, AppView) {
-  $(function() {App = new AppView();});
+  $(function() {window.App = new AppView();});
 });
