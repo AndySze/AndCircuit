@@ -1,4 +1,4 @@
-define('ComponentView',
+define('View/Component',
        ['jquery', 'backbone', 'underscore', 'jqueryui/draggable'],
        function($, Backbone, _) {
 

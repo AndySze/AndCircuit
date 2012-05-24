@@ -1,5 +1,6 @@
 define('AppView',
-       ['jquery', 'backbone', 'underscore', 'EaselJS/utils/Ticker', 'ComponentList', 'SchematicView', 'ComponentView'],
+       ['jquery', 'backbone', 'underscore', 'EaselJS/utils/Ticker', 'ComponentList',
+        'View/Schematic', 'View/Component'],
        function($, Backbone, _, Ticker, ComponentList, SchematicView, ComponentView) {
 
   var AppView = Backbone.View.extend({

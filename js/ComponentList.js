@@ -1,6 +1,6 @@
 define('ComponentList',
-       ['backbone', 'backbone/localstorage', 'Component'],
-       function(Backbone, bblocalStorage, Component) {
+       ['backbone', 'backbone/localstorage', 'Component', 'Components/Resistor'],
+       function(Backbone, bblocalStorage, Component, Resistor) {
 
   var ComponentList = Backbone.Collection.extend({
     model: Component,
@@ -14,6 +14,12 @@ define('ComponentList',
 
     comparator: function(component) {
       return component.get('order');
+    },
+
+    removeAll: function() {
+      while (this.length > 0) {
+        this.remove(this.at(0));
+      }
     }
   });
 

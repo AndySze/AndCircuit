@@ -1,8 +1,8 @@
-define('SchematicView',
-       ['jquery', 'backbone', 'underscore',
+define('View/Schematic',
+       ['jquery', 'backbone', 'underscore', 'View/Drawer',
          'EaselJS/display/Stage', 'EaselJS/display/Graphics', 'EaselJS/display/Shape',
          'jqueryui/draggable', 'jqueryui/droppable'],
-       function($, Backbone, _, Stage, Graphics, Shape) {
+       function($, Backbone, _, Drawer, Stage, Graphics, Shape) {
 
   var SchematicView = Backbone.View.extend({
     events: {
@@ -45,7 +45,9 @@ define('SchematicView',
         this.stage.removeChild(this.dragshape);
         this.dragshape = null;
       }
-      this.dragshape = new Shape(view.model.graphics);
+      var drawer = new Drawer();
+      view.model.getShape(drawer);
+      this.dragshape = new Shape(drawer.getGraphics());
       this.stage.addChild(this.dragshape);
       view.on('dragging', this.dragging);
     },
@@ -61,9 +63,9 @@ define('SchematicView',
     dragging: function(event, ui) {
       if (this.dragshape) {
         var position = this.$el.offset();
-        this.dragshape.x = event.pageX - position.left - 30;
+        this.dragshape.x = event.pageX - position.left;
         this.dragshape.x = Math.round(this.dragshape.x / 10) * 10;
-        this.dragshape.y = event.pageY - position.top - 20;
+        this.dragshape.y = event.pageY - position.top;
         this.dragshape.y = Math.round(this.dragshape.y / 10) * 10;
       }
     },
